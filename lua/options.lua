@@ -7,7 +7,7 @@
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -19,12 +19,15 @@ vim.o.showmode = false
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.schedule(function()
-  vim.o.clipboard = 'unnamedplus'
-end)
+-- vim.schedule(function()
+--   vim.opt.clipboard = 'unnamedplus'
+-- end)
 
 -- Enable break indent
 vim.o.breakindent = true
+
+-- Smart automatic indenting
+vim.opt.smartindent = true
 
 -- Save undo history
 vim.o.undofile = true
@@ -70,5 +73,15 @@ vim.o.scrolloff = 10
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
 vim.o.confirm = true
+
+-- Set shift width to 4 spaces.
+vim.opt.shiftwidth = 4
+
+-- Set tab width to 4 columns.
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+
+-- Use space characters instead of tabs.
+vim.opt.expandtab = true
 
 -- vim: ts=2 sts=2 sw=2 et
