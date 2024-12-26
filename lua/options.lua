@@ -30,7 +30,8 @@ vim.o.breakindent = true
 vim.opt.smartindent = true
 
 -- Save undo history
-vim.o.undofile = true
+vim.opt.undodir = os.getenv 'localappdata' .. '\\nvim-data\\undo\\undodir'
+vim.opt.undofile = true
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.o.ignorecase = true

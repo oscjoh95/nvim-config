@@ -105,5 +105,8 @@ require 'lazy-bootstrap'
 -- [[ Configure and install plugins ]]
 require 'lazy-plugins'
 
+-- Set color scheme
+vim.cmd.colorscheme 'tokyonight-night' -- You can switch to other styles like 'tokyonight-storm', etc.
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
