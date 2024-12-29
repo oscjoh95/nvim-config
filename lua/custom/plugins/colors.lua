@@ -3,6 +3,8 @@ function ColorMyPencils(color)
   vim.cmd.colorscheme(color)
 end
 
+local my_default_color_scheme = 'gruvbox'
+
 return {
   -- Tokyonight color scheme
   {
@@ -10,7 +12,9 @@ return {
     priority = 1000, -- Ensure this loads before other plugins
     init = function()
       -- Load the Tokyonight color scheme with the "night" style
-      vim.cmd.colorscheme 'tokyonight-night' -- You can switch to other styles like 'tokyonight-storm', etc.
+      if string.find(my_default_color_scheme, 'tokyonight') then
+        ColorMyPencils(my_default_color_scheme)
+      end
 
       -- Optionally, configure specific highlight groups here
       vim.cmd.hi 'Comment gui=none'
@@ -45,6 +49,9 @@ return {
         dim_inactive = false,
         transparent_mode = false,
       }
+      if string.find(my_default_color_scheme, 'gruvbox') then
+        ColorMyPencils(my_default_color_scheme)
+      end
     end,
   },
 
@@ -55,7 +62,9 @@ return {
     priority = 1000, -- Ensure this loads after Tokyonight (if you switch to it later)
     init = function()
       -- Load the Rose-pine color scheme with the 'main' variant
-      vim.cmd.colorscheme 'rose-pine' -- Switch this to 'rose-pine-moon' or 'rose-pine-dawn' if desired
+      if string.find(my_default_color_scheme, 'rose-pine') then
+        ColorMyPencils(my_default_color_scheme)
+      end
     end,
   },
 }
