@@ -108,5 +108,27 @@ require 'lazy-plugins'
 -- Set color scheme
 vim.cmd.colorscheme 'tokyonight-night' -- You can switch to other styles like 'tokyonight-storm', etc.
 
+-- [[ Basic Autocommands ]]
+--  See `:help lua-guide-autocommands`
+
+-- Removing traling whitespaces when saving buffers
+local Buffer_groups = vim.api.nvim_create_augroup('Buffer_groups', {})
+vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
+  group = Buffer_groups,
+  pattern = '*',
+  command = [[%s/\s\+$//e]],
+})
+
+-- Highlight when yanking (copying) text
+--  Try it with `yap` in normal mode
+--  See `:help vim.highlight.on_yank()`
+vim.api.nvim_create_autocmd('TextYankPost', {
+  desc = 'Highlight when yanking (copying) text',
+  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+})
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

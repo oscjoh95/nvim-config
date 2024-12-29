@@ -1,13 +1,13 @@
 return {
   'tpope/vim-fugitive',
   config = function()
-    vim.keymap.set('n', '<leader>gs', vim.cmd.Git)
+    vim.keymap.set('n', '<leader>gs', vim.cmd.Git, { desc = 'Toggle [G]it' })
 
-    local ThePrimeagen_Fugitive = vim.api.nvim_create_augroup('ThePrimeagen_Fugitive', {})
+    local fugitive_group = vim.api.nvim_create_augroup('fugitive_group', {})
 
     local autocmd = vim.api.nvim_create_autocmd
     autocmd('BufWinEnter', {
-      group = ThePrimeagen_Fugitive,
+      group = fugitive_group,
       pattern = '*',
       callback = function()
         if vim.bo.ft ~= 'fugitive' then
