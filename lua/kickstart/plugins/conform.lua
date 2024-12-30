@@ -7,7 +7,21 @@ return {
       {
         '<leader>f',
         function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
+          local bufnr = vim.api.nvim_get_current_buf()
+          local filetype = vim.bo[bufnr].filetype
+          local disable_filetypes = { c = true, cpp = true }
+
+          local lsp_format_opt
+          if disable_filetypes[filetype] then
+            lsp_format_opt = 'never'
+          else
+            lsp_format_opt = 'fallback'
+          end
+
+          require('conform').format {
+            async = true,
+            lsp_format = lsp_format_opt,
+          }
         end,
         mode = '',
         desc = '[F]ormat buffer',
@@ -31,6 +45,8 @@ return {
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        cpp = { 'clang_format' },
+        c = { 'clang_format' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
