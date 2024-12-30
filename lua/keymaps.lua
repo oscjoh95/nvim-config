@@ -83,8 +83,7 @@ vim.keymap.set('x', '<leader>P', '"_dP', { desc = 'Replace text and keep in regi
 -- Copy to clipboard
 vim.keymap.set('n', '<leader>y', '"+y', { desc = 'Copy to system clipboard' })
 vim.keymap.set('v', '<leader>y', '"+y', { desc = 'Copy to system clipboard' })
-vim.keymap.set('n', '<leader>Y', '"+Y', { desc = 'Copy to EOL to system clipboard' })
--- nmap <leader>Y \"+Y
+vim.keymap.set('n', '<leader>Y', '"+yg_', { desc = 'Copy to EOL to system clipboard' })
 
 -- Paste from clipbord
 vim.keymap.set('n', '<leader>p', '"+p', { desc = 'Paste from system clipboard' })
