@@ -66,4 +66,16 @@ return {
       end
     end,
   },
+
+  --Catpuccin colorscheme
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
+    config = function()
+      if string.find(my_default_color_scheme, 'catppuccin') then
+        ColorMyPencils(my_default_color_scheme)
+      end
+    end,
+  },
 }
