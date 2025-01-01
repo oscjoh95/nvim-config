@@ -96,6 +96,9 @@ vim.g.have_nerd_font = true
 -- [[ Setting options ]]
 require 'options'
 
+-- [[Misc functions to include]]
+require 'misc_functions'
+
 -- [[ Basic Keymaps ]]
 require 'keymaps'
 

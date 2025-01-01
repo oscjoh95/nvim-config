@@ -107,4 +107,8 @@ vim.keymap.set('x', '@', function()
   return ':norm @ ' .. vim.fn.getcharstr() .. '<CR>'
 end, { expr = true })
 
+-- Switch between header and source file
+local misc_functions = require 'misc_functions'
+vim.keymap.set('n', '<leader>ts', misc_functions.switch_source_header, { desc = 'Toggle between [S]ource/Header' })
+
 -- vim: ts=2 sts=2 sw=2 et
