@@ -1,9 +1,8 @@
+local my_default_color_scheme = 'gruvbox'
 function ColorMyPencils(color)
-  color = color or 'tokyonight-night'
+  color = color or my_default_color_scheme
   vim.cmd.colorscheme(color)
 end
-
-local my_default_color_scheme = 'gruvbox'
 
 return {
   -- Tokyonight color scheme
