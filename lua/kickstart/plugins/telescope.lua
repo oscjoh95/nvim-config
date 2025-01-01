@@ -1,3 +1,8 @@
+local function get_project_dir()
+  local current_dir = vim.fn.expand '%:p:h'
+  return vim.fn.fnamemodify(current_dir, ':h')
+end
+
 -- NOTE: Plugins can specify dependencies.
 --
 -- The dependencies are proper plugin specifications as well - anything
@@ -76,17 +81,51 @@ return {
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>swf', function()
+        builtin.find_files { prompt_title = 'Workspace Find Files' }
+      end, { desc = '[S]earch [W]orkspace [F]iles' })
+      -- Search files in the directory of the current buffer
+      vim.keymap.set('n', '<leader>sf', function()
+        builtin.find_files { cwd = get_project_dir() }
+      end, { desc = '[S]earch Files in [B]uffer Directory' })
       -- vim.keymap.set('n', '<leader>pf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>gf', builtin.git_files, { desc = 'Search [G]it [F]iles' })
+      vim.keymap.set('n', '<leader>gwf', function()
+        builtin.git_files { prompt_title = 'Workspace Git Files' }
+      end, { desc = 'Search [G]it [W]orkspace [F]iles' })
+      -- Search Git files in the directory of the current buffer
+      vim.keymap.set('n', '<leader>gf', function()
+        builtin.git_files { cwd = get_project_dir() }
+      end, { desc = 'Search [G]it [F]iles' })
       -- vim.keymap.set('n', '<C-p>', builtin.git_files, { desc = 'Search [G]it [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      -- vim.keymap.set('n', '<leader>ps', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+      vim.keymap.set('n', '<leader>scw', function()
+        builtin.grep_string { cwd = get_project_dir() }
+      end, { desc = '[S]earch [C]urrent [W]ord' })
+      vim.keymap.set('n', '<leader>swcw', function()
+        local current_word = vim.fn.expand '<cword>'
+        builtin.grep_string { prompt_title = 'Workspace Live Grep (' .. current_word .. ')' }
+      end, { desc = '[S]earch [W]orkspace [C]urrent [W]ord' })
+      vim.keymap.set('n', '<leader>scW', function()
+        local current_word = vim.fn.expand '<cWORD>'
+        builtin.grep_string { search = current_word, cwd = get_project_dir() }
+      end, { desc = '[S]earch [C]urrent [W]ORD' })
+      vim.keymap.set('n', '<leader>swcW', function()
+        local current_word = vim.fn.expand '<cWORD>'
+        builtin.grep_string { searhc = current_word, prompt_title = 'Workspace Live Grep (' .. current_word .. ')' }
+      end, { desc = '[S]earch [W]orkspace [C]urrent [W]ORD' })
+      -- vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>swg', function()
+        require 'kickstart.plugins.telescope.multi-ripgrep' { prompt_title = 'Workspace Live grep (with shortcuts)' }
+      end, { desc = '[S]earch [W]orkspace by [G]rep, double space to add filter' })
       vim.keymap.set('n', '<leader>sg', function()
-        require 'kickstart.plugins.telescope.multi-ripgrep'
+        require 'kickstart.plugins.telescope.multi-ripgrep' { cwd = get_project_dir() }
       end, { desc = '[S]earch by [G]rep, double space to add filter' })
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+      vim.keymap.set('n', '<leader>swd', function()
+        builtin.diagnostics { prompt_title = 'Workspace Search Diagnostics' }
+      end, { desc = '[S]earch [W]orkspace [D]iagnostics' })
+      vim.keymap.set('n', '<leader>sd', function()
+        builtin.diagnostics { cwd = get_project_dir() }
+      end, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
