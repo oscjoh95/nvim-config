@@ -4,6 +4,7 @@
 -- See the kickstart.nvim README for more information
 return {
   require 'custom.plugins.auto-session',
+  -- require 'custom.plugins.bufferline',
   require 'custom.plugins.colors',
   require 'custom.plugins.fugitive',
   require 'custom.plugins.harpoon',
