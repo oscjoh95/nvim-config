@@ -57,8 +57,8 @@ vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move marked lines down' }
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { desc = 'Move marked lines up' })
 
 -- Mappping indent and outdent
-vim.keymap.set('n', '<tab>', '>>', { desc = 'Indent line' })
-vim.keymap.set('n', '<S-tab>', '<<', { desc = 'Deindent line' })
+-- vim.keymap.set('n', '<tab>', '>>', { desc = 'Indent line' })
+-- vim.keymap.set('n', '<S-tab>', '<<', { desc = 'Deindent line' })
 vim.keymap.set('x', '<tab>', '>', { desc = 'Indent line' })
 vim.keymap.set('x', '<S-tab>', '<', { desc = 'Deindent line' })
 
