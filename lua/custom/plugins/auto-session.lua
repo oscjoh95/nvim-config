@@ -5,6 +5,8 @@ return {
       enabled = true,
       auto_save = true, -- Enables/disables auto saving session on exit
       auto_restore = true, -- Enables/disables auto restoring session on start
+      auto_create = false,
+      cwd_change_handling = true,
       -- auto_restore_last_session = true,
       show_auto_restore_notif = true, -- Whether to show a notification when auto-restoring
       auto_session_suppress_dirs = { 'C:\\', '~\\Downloads*', '~\\Documents\\*' },
@@ -44,6 +46,31 @@ return {
         end,
       },
     }
+
+    -- Function to save the session if it exists
+    local function save_session()
+      -- local session = require('auto-session.lib').get_session_name()
+      local session = require('auto-session.lib').current_session_name()
+      if session and #session > 0 then
+        local buftype = vim.bo.buftype
+        local filetype = vim.bo.filetype
+
+        -- Skip saving for certain buffer types (e.g terminal or quickfix buffers) or filetypes
+        if buftype == '' and not vim.tbl_contains({ 'TelescopePrompt', 'fugitive' }, filetype) then
+          require('auto-session').SaveSession(session, false)
+        end
+      end
+    end
+
+    local session_group = vim.api.nvim_create_augroup('SessionManagement', {})
+    vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost', 'BufWritePost', 'BufDelete' }, {
+      pattern = '*',
+      group = session_group,
+      callback = function()
+        save_session()
+      end,
+      desc = 'Automatically save the session on buffer events, skipping certain types',
+    })
 
     -- vim.keymap.set('n', '<Leader>ls', require('auto-session.session-lens').search_session, {
     --   noremap = true,
