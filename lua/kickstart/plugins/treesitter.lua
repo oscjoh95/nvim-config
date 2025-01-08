@@ -62,7 +62,7 @@ return {
         zindex = 20, -- Set the Z-index of the context window
         on_attach = nil, -- No custom on_attach function
       }
-      vim.keymap.set('n', '[tc', function()
+      vim.keymap.set('n', '<leader>[tc', function()
         require('treesitter-context').go_to_context(vim.v.count1)
       end, { silent = true, desc = 'Previous [C]ontext' })
     end,
