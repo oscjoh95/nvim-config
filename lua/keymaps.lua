@@ -56,11 +56,11 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move marked lines down' })
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { desc = 'Move marked lines up' })
 
--- Mappping indent and outdent
+-- Mappping indent and deindent
 -- vim.keymap.set('n', '<tab>', '>>', { desc = 'Indent line' })
 -- vim.keymap.set('n', '<S-tab>', '<<', { desc = 'Deindent line' })
-vim.keymap.set('x', '<tab>', '>', { desc = 'Indent line' })
-vim.keymap.set('x', '<S-tab>', '<', { desc = 'Deindent line' })
+vim.keymap.set('x', '<tab>', '>gv', { desc = 'Indent line' })
+vim.keymap.set('x', '<S-tab>', '<gv', { desc = 'Deindent line' })
 
 -- Center on jumping
 vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Center on jumping down' })
