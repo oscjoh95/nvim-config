@@ -124,8 +124,11 @@ return {
         builtin.diagnostics { prompt_title = 'Workspace Search Diagnostics' }
       end, { desc = '[S]earch [W]orkspace [D]iagnostics' })
       vim.keymap.set('n', '<leader>sd', function()
-        builtin.diagnostics { cwd = get_project_dir() }
+        builtin.diagnostics { root_dir = get_project_dir(), prompt_title = 'Project Search Diagnostics' }
       end, { desc = '[S]earch [D]iagnostics' })
+      vim.keymap.set('n', '<leader>sbd', function()
+        builtin.diagnostics { bufnr = 0, prompt_title = 'Buffer Search Diagnostics' }
+      end, { desc = '[S]earch [B]uffer [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
