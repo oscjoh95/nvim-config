@@ -131,25 +131,25 @@ vim.api.nvim_set_keymap(
   'n',
   '<leader>tf',
   ':lua require("terminal").toggle_floating_terminal()<CR>',
-  { desc = 'Toggle floating terminal', noremap = true, silent = true }
+  { desc = '[T]oggle [F]loating Terminal', noremap = true, silent = true }
 )
 vim.api.nvim_set_keymap(
   't',
   '<leader>tf',
   ':lua require("terminal").toggle_floating_terminal()<CR>',
-  { desc = 'Toggle floating terminal', noremap = true, silent = true }
+  { desc = '[T]oggle [F]loating [T]erminal', noremap = true, silent = true }
 )
 vim.api.nvim_set_keymap(
   'n',
   '<leader>tb',
   ':lua require("terminal").toggle_bottom_terminal()<CR>',
-  { desc = 'Toggle floating terminal', noremap = true, silent = true }
+  { desc = '[T]oggle [B]ottom Terminal', noremap = true, silent = true }
 )
 vim.api.nvim_set_keymap(
   't',
   '<leader>tb',
   ':lua require("terminal").toggle_bottom_terminal()<CR>',
-  { desc = 'Toggle floating terminal', noremap = true, silent = true }
+  { desc = '[T]oggle [B]ottom Terminal', noremap = true, silent = true }
 )
 
 return M

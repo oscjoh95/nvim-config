@@ -75,7 +75,7 @@ vim.keymap.set('n', 'J', 'mzJ`z', { desc = 'Combine lines, but keep cursor posit
 vim.keymap.set('x', '*', '"zy/<C-R>z<CR>', { desc = 'Search for marked text in visual mode' })
 
 -- Start changing word under cursor
-vim.keymap.set('n', '<leader>s', ':%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>', { desc = 'Start chaning word under cursor' })
+vim.keymap.set('n', '<leader>ss', ':%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>', { desc = 'Start changing word under cursor' })
 
 -- In visual mode, replace text and keep in register
 vim.keymap.set('x', '<leader>P', '"_dP', { desc = 'Replace text and keep in register' })

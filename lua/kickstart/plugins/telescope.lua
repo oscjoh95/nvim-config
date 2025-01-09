@@ -1,5 +1,6 @@
 local function get_project_dir()
-  local current_dir = vim.fn.expand '%:p:h'
+  -- local current_dir = vim.fn.expand '%:p:h'
+  local current_dir = vim.fn.expand '%:p'
   return vim.fn.fnamemodify(current_dir, ':h')
 end
 
@@ -97,7 +98,7 @@ return {
         builtin.git_files { cwd = get_project_dir() }
       end, { desc = 'Search [G]it [F]iles' })
       -- vim.keymap.set('n', '<C-p>', builtin.git_files, { desc = 'Search [G]it [F]iles' })
-      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+      vim.keymap.set('n', '<leader>st', builtin.builtin, { desc = '[S]earch Select [T]elescope' })
       vim.keymap.set('n', '<leader>scw', function()
         builtin.grep_string { cwd = get_project_dir() }
       end, { desc = '[S]earch [C]urrent [W]ord' })
