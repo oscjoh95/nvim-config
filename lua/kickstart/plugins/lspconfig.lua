@@ -26,7 +26,12 @@ return {
       -- Useful status updates for LSP.
       { 'j-hui/fidget.nvim', opts = {} },
 
+<<<<<<< HEAD
       -- Allows extra capabilities provided by blink.cmp
+=======
+      -- Allows extra capabilities provided by nvim-cmp
+      -- 'hrsh7th/cmp-nvim-lsp',
+>>>>>>> a408ec3 (Changed completion engine to blink)
       'saghen/blink.cmp',
     },
     config = function()
