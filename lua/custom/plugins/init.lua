@@ -10,7 +10,6 @@ return {
   require 'custom.plugins.fugitive',
   require 'custom.plugins.harpoon',
   require 'custom.plugins.markdown',
-  -- require 'custom.plugins.snippets',
   require 'custom.plugins.statusline',
   require 'custom.plugins.trouble',
   require 'custom.plugins.undotree',
