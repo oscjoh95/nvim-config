@@ -38,7 +38,7 @@ return {
           return nil
         else
           return {
-            timeout_ms = 500,
+            timeout_ms = 1000,
             lsp_format = 'fallback',
           }
         end
@@ -47,6 +47,7 @@ return {
         lua = { 'stylua' },
         cpp = { 'clang_format' },
         c = { 'clang_format' },
+        markdown = { 'markdownlint' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
