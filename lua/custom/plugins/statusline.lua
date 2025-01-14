@@ -27,7 +27,7 @@ return {
       'diff',
       -- symbols = { added = ' ', modified = ' ', removed = ' ' },
       -- separator = { left = '', right = '' },
-      separator = { left = '', right = '' },
+      separator = { left = '', right = '' },
       symbols = { added = '+', modified = '~', removed = '-' },
       colored = true,
       always_visible = false,
