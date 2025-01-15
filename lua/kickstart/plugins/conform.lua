@@ -48,6 +48,7 @@ return {
         cpp = { 'clang_format' },
         c = { 'clang_format' },
         markdown = { 'markdownlint' },
+        python = { 'ruff' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
