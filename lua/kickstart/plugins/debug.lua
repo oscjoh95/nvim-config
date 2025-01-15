@@ -17,12 +17,15 @@ return {
     -- Required dependency for nvim-dap-ui
     'nvim-neotest/nvim-nio',
 
+    -- Show evaluation of the variables
+    'theHamsta/nvim-dap-virtual-text',
+
     -- Installs the debug adapters for you
     'williamboman/mason.nvim',
     'jay-babu/mason-nvim-dap.nvim',
 
     -- Add your own debuggers here
-    'leoluz/nvim-dap-go',
+    'mfussenegger/nvim-dap-python',
   },
   keys = {
     -- Basic debugging keymaps, feel free to change to your liking!
@@ -34,14 +37,23 @@ return {
       desc = 'Debug: Start/Continue',
     },
     {
-      '<F1>',
+      '<S-F5>',
+      function()
+        require('dap').stop()
+        require('dapui').close()
+      end,
+      desc = 'Debug: Stop debugging',
+      silent = true,
+    },
+    {
+      '<F2>',
       function()
         require('dap').step_into()
       end,
       desc = 'Debug: Step Into',
     },
     {
-      '<F2>',
+      '<F1>',
       function()
         require('dap').step_over()
       end,
@@ -55,14 +67,21 @@ return {
       desc = 'Debug: Step Out',
     },
     {
-      '<leader>b',
+      '<F4>',
+      function()
+        require('dap').goto_()
+      end,
+      desc = 'Debug: Go To line',
+    },
+    {
+      '<leader>db',
       function()
         require('dap').toggle_breakpoint()
       end,
       desc = 'Debug: Toggle Breakpoint',
     },
     {
-      '<leader>B',
+      '<leader>dB',
       function()
         require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
       end,
@@ -87,6 +106,7 @@ return {
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
+    local virtualtext = require 'nvim-dap-virtual-text'
 
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
@@ -101,7 +121,7 @@ return {
       -- online, please don't ask me how to install them :)
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
-        'delve',
+        'python',
       },
     }
 
@@ -127,6 +147,10 @@ return {
       },
     }
 
+    virtualtext.setup {
+      commented = true, -- Show evaluations as comments
+    }
+
     -- Change breakpoint icons
     vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
     vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
@@ -143,13 +167,19 @@ return {
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-    -- Install golang specific config
-    require('dap-go').setup {
-      delve = {
-        -- On Windows delve must be run attached or it crashes.
-        -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
-        detached = vim.fn.has 'win32' == 0,
-      },
-    }
+    dap.configurations.python[1].pythonPath = os.getenv 'CONDA_PREFIX' .. '\\python.exe'
+    -- Install Python specific config
+    require('dap-python').setup 'C:\\Users\\BLOC\\AppData\\Local\\nvim-data\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe'
+    -- require('dap-python').setup(
+    -- 'C:\\Users\\BLOC\\AppData\\Local\\nvim-data\\mason\\packages\\debugpy\\venv\\Scripts\\python.exe',
+    -- { pythonPath = os.getenv 'CONDA_PREFIX' .. '\\python.exe' }
+    -- )
+    -- require('dap-python').resolve_python = function()
+    --   return os.getenv 'CONDA_PREFIX' .. '\\python.exe'
+    -- end
+
+    -- Some more keymaps
+    vim.keymap.set('n', '<leader>=', '<cmd>lua require("dapui").eval()<CR>', { desc = 'Debug: Eval expression under cursor' })
+    vim.keymap.set('v', '<leader>=', '<cmd>lua require("dapui").eval()<CR>', { desc = 'Debug: Eval expression under cursor' })
   end,
 }
