@@ -180,6 +180,8 @@ return {
         auto_show_delay_ms = 200,
         window = {
           border = 'single',
+          -- winblend = 1, -- Makes background black
+          winhighlight = 'Normal:BlinkCmpMenu,FloatBorder:BlinkCmpMenuBorder',
         },
       },
       -- Displays a preview of the selected item on the current line
@@ -189,7 +191,14 @@ return {
     }
 
     -- This is experimentall, might have to be exluded
-    opts.signature = { enabled = true }
+    opts.signature = {
+      enabled = true,
+      window = {
+        winhighlight = 'Normal:BlinkCmpMenu,FloatBorder:BlinkCmpMenuBorder',
+        -- This is defualt values, will be transparent if background is transparent
+        -- winhighlight = 'Normal:BlinkCmpSignatureHelp,FloatBorder:BlinkCmpSignatureHelpBorder',
+      },
+    }
 
     -- opts.fuzzy = {
     --   -- Disabling this matches the behavior of fzf
