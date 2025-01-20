@@ -57,6 +57,27 @@ return {
 
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
+
+      -- Simple implementation of first printing file name when searching for files
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'TelescopeResults',
+        callback = function(ctx)
+          vim.api.nvim_buf_call(ctx.buf, function()
+            vim.fn.matchadd('TelescopeParent', '\t\t.*$')
+            vim.api.nvim_set_hl(0, 'TelescopeParent', { link = 'Comment' })
+          end)
+        end,
+      })
+
+      local filenameFirst = function(_, path)
+        local tail = vim.fs.basename(path)
+        local parent = vim.fs.dirname(path)
+        if parent == '.' then
+          return tail
+        end
+        return string.format('%s\t\t%s', tail, parent)
+      end
+
       require('telescope').setup {
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
@@ -68,8 +89,13 @@ return {
               ['<leader>db'] = require('telescope.actions').delete_buffer,
             },
           },
+          -- path_display = { 'filename_first' }, -- This doesnt work for some reason
         },
-        -- pickers = {}
+        pickers = {
+          -- find_files = { path_display = filenameFirst },
+          git_files = { path_display = filenameFirst },
+          -- oldfiles = { path_display = filenameFirst },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -86,20 +112,25 @@ return {
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>swf', function()
-        builtin.find_files { prompt_title = 'Workspace Find Files' }
+        require('kickstart.plugins.telescope.telescopePickers').prettyFilesPicker { picker = 'find_files', options = { prompt_title = 'Workspace Find Files' } }
       end, { desc = '[S]earch [W]orkspace [F]iles' })
       -- Search files in the directory of the current buffer
       vim.keymap.set('n', '<leader>sf', function()
-        builtin.find_files { cwd = get_project_dir() }
+        require('kickstart.plugins.telescope.telescopePickers').prettyFilesPicker { picker = 'find_files', options = { cwd = get_project_dir() } }
       end, { desc = '[S]earch Files in [B]uffer Directory' })
-      -- vim.keymap.set('n', '<leader>pf', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>gwf', function()
         builtin.git_files { prompt_title = 'Workspace Git Files' }
       end, { desc = 'Search [G]it [W]orkspace [F]iles' })
+      -- vim.keymap.set('n', '<leader>gwf', function()
+      --   require('kickstart.plugins.telescope.telescopePickers').prettyFilesPicker { picker = 'git_files', options = { prompt_title = 'Workspace Git Files' } }
+      -- end, { desc = 'Search [G]it [W]orkspace [F]iles' })
       -- Search Git files in the directory of the current buffer
       vim.keymap.set('n', '<leader>gf', function()
-        builtin.git_files { cwd = get_project_dir() }
+        builtin.git_files { cwd = get_project_dir(), use_git_root = false }
       end, { desc = 'Search [G]it [F]iles' })
+      -- vim.keymap.set('n', '<leader>gf', function()
+      --   require('kickstart.plugins.telescope.telescopePickers').prettyFilesPicker { picker = 'git_files', options = { cwd = get_project_dir() , use_git_root = false } }
+      -- end, { desc = 'Search [G]it [F]iles' })
       -- vim.keymap.set('n', '<C-p>', builtin.git_files, { desc = 'Search [G]it [F]iles' })
       vim.keymap.set('n', '<leader>st', builtin.builtin, { desc = '[S]earch Select [T]elescope' })
       vim.keymap.set('n', '<leader>scw', function()
@@ -134,7 +165,9 @@ return {
         builtin.diagnostics { bufnr = 0, prompt_title = 'Buffer Search Diagnostics' }
       end, { desc = '[S]earch [B]uffer [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      vim.keymap.set('n', '<leader>s.', function()
+        require('kickstart.plugins.telescope.telescopePickers').prettyFilesPicker { picker = 'oldfiles' }
+      end, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
       -- Slightly advanced example of overriding default behavior and theme
