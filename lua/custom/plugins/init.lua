@@ -8,6 +8,7 @@ return {
   -- require 'custom.plugins.bufferline',
   require 'custom.plugins.colors',
   require 'custom.plugins.fugitive',
+  require 'custom.plugins.git-conflict',
   require 'custom.plugins.harpoon',
   require 'custom.plugins.markdown',
   require 'custom.plugins.none_ls',
