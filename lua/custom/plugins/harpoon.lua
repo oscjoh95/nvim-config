@@ -55,7 +55,7 @@ return {
       vim.keymap.set('n', '<C-S-N>', function()
         harpoon:list():next()
       end, { desc = 'Toggle [N]ext buffer in Harpoon list' })
-      vim.keymap.set('n', '<C-e>', function()
+      vim.keymap.set('n', '<leader><C-e>', function()
         toggle_telescope(harpoon:list())
       end, { desc = 'Open harpoon window' })
     end,
