@@ -262,6 +262,8 @@ function telescopePickers.prettyGrepPicker(pickerAndOptions)
     require('telescope.builtin').live_grep(options)
   elseif pickerAndOptions.picker == 'grep_string' then
     require('telescope.builtin').grep_string(options)
+  elseif pickerAndOptions.picker == 'multi-ripgrep' then
+    require 'kickstart.plugins.telescope.multi-ripgrep'(options)
   elseif pickerAndOptions.picker == '' then
     print 'Picker was not specified'
   else

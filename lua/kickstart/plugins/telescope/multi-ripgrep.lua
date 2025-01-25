@@ -51,7 +51,7 @@ return function(opts)
         { '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case' },
       }
     end,
-    entry_maker = make_entry.gen_from_vimgrep(opts),
+    entry_maker = opts.entry_maker or make_entry.gen_from_vimgrep(opts),
     cwd = opts.cwd,
   }
 
