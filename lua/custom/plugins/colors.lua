@@ -109,4 +109,23 @@ return {
       end
     end,
   },
+
+  -- vscode colorscheme
+  {
+    'Mofiqul/vscode.nvim',
+    name = 'vscode',
+    opts = {
+      transparent = true,
+      italic_comments = true,
+      styles = {
+        sidebars = 'transparent',
+        floats = 'transparent',
+      },
+    },
+    config = function()
+      if string.find(my_default_color_scheme, 'vscode') then
+        ColorMyPencils(my_default_color_scheme)
+      end
+    end,
+  },
 }
