@@ -134,26 +134,38 @@ return {
       -- vim.keymap.set('n', '<C-p>', builtin.git_files, { desc = 'Search [G]it [F]iles' })
       vim.keymap.set('n', '<leader>st', builtin.builtin, { desc = '[S]earch Select [T]elescope' })
       vim.keymap.set('n', '<leader>scw', function()
-        builtin.grep_string { cwd = get_project_dir() }
+        require('kickstart.plugins.telescope.telescopePickers').prettyGrepPicker { picker = 'grep_string', options = { cwd = get_project_dir() } }
       end, { desc = '[S]earch [C]urrent [W]ord' })
       vim.keymap.set('n', '<leader>swcw', function()
         local current_word = vim.fn.expand '<cword>'
-        builtin.grep_string { prompt_title = 'Workspace Live Grep (' .. current_word .. ')' }
+        require('kickstart.plugins.telescope.telescopePickers').prettyGrepPicker {
+          picker = 'grep_string',
+          options = { prompt_title = 'Workspace Live Grep (' .. current_word .. ')' },
+        }
       end, { desc = '[S]earch [W]orkspace [C]urrent [W]ord' })
       vim.keymap.set('n', '<leader>scW', function()
         local current_word = vim.fn.expand '<cWORD>'
-        builtin.grep_string { search = current_word, cwd = get_project_dir() }
+        require('kickstart.plugins.telescope.telescopePickers').prettyGrepPicker {
+          picker = 'grep_string',
+          options = { search = current_word, cwd = get_project_dir() },
+        }
       end, { desc = '[S]earch [C]urrent [W]ORD' })
       vim.keymap.set('n', '<leader>swcW', function()
         local current_word = vim.fn.expand '<cWORD>'
-        builtin.grep_string { searhc = current_word, prompt_title = 'Workspace Live Grep (' .. current_word .. ')' }
+        require('kickstart.plugins.telescope.telescopePickers').prettyGrepPicker {
+          picker = 'grep_string',
+          options = { searhc = current_word, prompt_title = 'Workspace Live Grep (' .. current_word .. ')' },
+        }
       end, { desc = '[S]earch [W]orkspace [C]urrent [W]ORD' })
       -- vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>swg', function()
-        require 'kickstart.plugins.telescope.multi-ripgrep' { prompt_title = 'Workspace Live grep (with shortcuts)' }
+        require('kickstart.plugins.telescope.telescopePickers').prettyGrepPicker {
+          picker = 'multi-ripgrep',
+          options = { prompt_title = 'Workspace Live grep (with shortcuts)' },
+        }
       end, { desc = '[S]earch [W]orkspace by [G]rep, double space to add filter' })
       vim.keymap.set('n', '<leader>sg', function()
-        require 'kickstart.plugins.telescope.multi-ripgrep' { cwd = get_project_dir() }
+        require('kickstart.plugins.telescope.telescopePickers').prettyGrepPicker { picker = 'multi-ripgrep', options = { cwd = get_project_dir() } }
       end, { desc = '[S]earch by [G]rep, double space to add filter' })
       vim.keymap.set('n', '<leader>swd', function()
         builtin.diagnostics { prompt_title = 'Workspace Search Diagnostics' }
@@ -168,7 +180,12 @@ return {
       vim.keymap.set('n', '<leader>s.', function()
         require('kickstart.plugins.telescope.telescopePickers').prettyFilesPicker { picker = 'oldfiles' }
       end, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set(
+        'n',
+        '<leader><leader>',
+        require('kickstart.plugins.telescope.telescopePickers').prettyBuffersPicker,
+        { desc = '[ ] Find existing buffers' }
+      )
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -183,15 +200,18 @@ return {
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
       -- vim.keymap.set('n', '<leader>sb', function()
       vim.keymap.set('n', '<leader>s/', function()
-        builtin.live_grep {
-          grep_open_files = true,
-          prompt_title = 'Live Grep in Open Files',
+        require('kickstart.plugins.telescope.telescopePickers').prettyGrepPicker {
+          picker = 'multi-ripgrep',
+          options = {
+            grep_open_files = true,
+            prompt_title = 'Live Grep in Open Files',
+          },
         }
       end, { desc = '[S]earch [/] in Open Files' })
 
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>sn', function()
-        builtin.find_files { cwd = vim.fn.stdpath 'config' }
+        require('kickstart.plugins.telescope.telescopePickers').prettyFilesPicker { picker = 'find_files', options = { cwd = vim.fn.stdpath 'config' } }
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
