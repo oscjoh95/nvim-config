@@ -31,7 +31,8 @@ return {
       end,
     })
 
-    vim.keymap.set('n', 'gu', '<cmd>diffget //2<CR>')
-    vim.keymap.set('n', 'gh', '<cmd>diffget //3<CR>')
+    vim.keymap.set('n', 'gdh', '<cmd>diffget //2<CR>')
+    vim.keymap.set('n', 'gdl', '<cmd>diffget //3<CR>')
+    vim.keymap.set('n', '<leader>gvd', '<cmd>Gvdiffsplit!<CR>', { desc = 'Toggle git diff of current file' })
   end,
 }
