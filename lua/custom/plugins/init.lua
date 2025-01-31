@@ -13,6 +13,7 @@ return {
   require 'custom.plugins.markdown',
   require 'custom.plugins.none_ls',
   require 'custom.plugins.scrollbar',
+  require 'custom.plugins.startup_project',
   require 'custom.plugins.statusline',
   require 'custom.plugins.trouble',
   require 'custom.plugins.undotree',
