@@ -1,3 +1,48 @@
+local function url_decode(encoded_path)
+  return encoded_path:gsub('%%(%x%x)', function(hex)
+    return string.char(tonumber(hex, 16))
+  end)
+end
+
+local function url_encode(path)
+  return path:gsub('([^%w%.%-_~])', function(char)
+    return string.format('%%%02X', string.byte(char))
+  end)
+end
+
+local function make_session_windows_compatible()
+  local cwd = vim.uv.cwd()
+  local filename = url_encode(cwd) .. '.vim'
+  local filepath = vim.fn.stdpath 'data' .. '\\sessions\\' .. filename
+
+  -- Open file and change all badd / to \ for windows compatibility
+  local file = io.open(filepath, 'r')
+  if not file then
+    return
+  end
+
+  local lines = {}
+  for line in file:lines() do
+    -- If the line contains "badd", replace "/" with "\"
+    if line:match 'badd' then
+      line = line:gsub('/', '\\')
+    end
+    table.insert(lines, line)
+  end
+  file:close()
+
+  -- Write back the modified content
+  file = io.open(filepath, 'w')
+  if not file then
+    return
+  end
+
+  for _, line in ipairs(lines) do
+    file:write(line .. '\n')
+  end
+  file:close()
+end
+
 return {
   'rmagatti/auto-session',
   config = function()
@@ -45,6 +90,10 @@ return {
           return { setqflist, setqfinfo, 'copen' }
         end,
       },
+
+      -- Change buffer paths to be windows compatible
+      post_save_cmds = { make_session_windows_compatible() },
+      pre_restore_cmds = { make_session_windows_compatible() },
     }
 
     -- Function to save the session if it exists
