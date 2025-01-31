@@ -402,24 +402,29 @@ function telescopePickers.prettyBuffersPicker(localOptions)
     local originalEntryTable = originalEntryMaker(line)
 
     local displayer = telescopeEntryDisplayModule.create {
-      separator = ' ',
+      separator = '',
       items = {
-        { width = fileTypeIconWidth },
+        { width = nil },
+        { width = nil },
         { width = nil },
         { width = nil },
         { remaining = true },
       },
     }
 
+    local halfSeparator = string.rep(' ', math.max(math.floor(fileTypeIconWidth / 2), 1))
+
     originalEntryTable.display = function(entry)
       local tail, path = telescopePickers.getPathAndTail(entry.filename)
-      local tailForDisplay = tail .. ' '
+      local tailForDisplay = tail .. ' ' .. halfSeparator
       local icon, iconHighlight = telescopeUtilities.get_devicons(tail)
-
+      local modifiedSymbol = vim.api.nvim_get_option_value('modified', { buf = entry.bufnr }) and '+' or ' '
+      local modified = vim.api.nvim_get_option_value('modified', { buf = entry.bufnr })
       return displayer {
         { icon, iconHighlight },
-        tailForDisplay,
-        { '(' .. entry.bufnr .. ')', 'TelescopeResultsNumber' },
+        { '' .. halfSeparator .. modifiedSymbol .. halfSeparator, 'Changed' },
+        modified and { tailForDisplay, 'Changed' } or tailForDisplay,
+        { '(' .. entry.bufnr .. ') ' .. halfSeparator, 'TelescopeResultsNumber' },
         { path, 'TelescopeResultsComment' },
       }
     end
