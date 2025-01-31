@@ -28,7 +28,7 @@ function telescopePickers.getPathAndTail(fileName)
 
   -- Apply truncation and other pertaining modifications to the path according to Telescope path rules
   local pathToDisplay = telescopeUtilities.transform_path({
-    path_display = { 'truncate' },
+    path_display = { 'truncate', cwd = vim.uv.cwd() },
   }, pathWithoutTail)
 
   -- Return as Tuple
