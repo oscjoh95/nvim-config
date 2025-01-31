@@ -418,12 +418,11 @@ function telescopePickers.prettyBuffersPicker(localOptions)
       local tail, path = telescopePickers.getPathAndTail(entry.filename)
       local tailForDisplay = tail .. ' ' .. halfSeparator
       local icon, iconHighlight = telescopeUtilities.get_devicons(tail)
-      local modifiedSymbol = vim.api.nvim_get_option_value('modified', { buf = entry.bufnr }) and '+' or ' '
-      local modified = vim.api.nvim_get_option_value('modified', { buf = entry.bufnr })
+      local modifiedSymbol = vim.api.nvim_get_option_value('modified', { buf = entry.bufnr }) and ' [+]' or '    '
       return displayer {
         { icon, iconHighlight },
-        { '' .. halfSeparator .. modifiedSymbol .. halfSeparator, 'Changed' },
-        modified and { tailForDisplay, 'Changed' } or tailForDisplay,
+        { modifiedSymbol, 'GruvboxGreenBold' },
+        tailForDisplay,
         { '(' .. entry.bufnr .. ') ' .. halfSeparator, 'TelescopeResultsNumber' },
         { path, 'TelescopeResultsComment' },
       }
