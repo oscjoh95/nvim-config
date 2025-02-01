@@ -4,6 +4,11 @@ local function get_project_dir()
   return vim.fn.fnamemodify(current_dir, ':h')
 end
 
+local function get_git_dir()
+  local git_dir = vim.fn.finddir('.git', '.;')
+  return vim.fn.fnamemodify(git_dir, ':h')
+end
+
 -- NOTE: Plugins can specify dependencies.
 --
 -- The dependencies are proper plugin specifications as well - anything
@@ -91,11 +96,6 @@ return {
           },
           -- path_display = { 'filename_first' }, -- This doesnt work for some reason
         },
-        pickers = {
-          -- find_files = { path_display = filenameFirst },
-          git_files = { path_display = filenameFirst },
-          -- oldfiles = { path_display = filenameFirst },
-        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -119,19 +119,17 @@ return {
         require('kickstart.plugins.telescope.telescopePickers').prettyFilesPicker { picker = 'find_files', options = { cwd = get_project_dir() } }
       end, { desc = '[S]earch Files in [B]uffer Directory' })
       vim.keymap.set('n', '<leader>gwf', function()
-        builtin.git_files { prompt_title = 'Workspace Git Files' }
+        require('kickstart.plugins.telescope.telescopePickers').prettyFilesPicker {
+          picker = 'git_files',
+          options = { prompt_title = 'Workspace Git Files', cwd = get_git_dir(), use_git_root = false },
+        }
       end, { desc = 'Search [G]it [W]orkspace [F]iles' })
-      -- vim.keymap.set('n', '<leader>gwf', function()
-      --   require('kickstart.plugins.telescope.telescopePickers').prettyFilesPicker { picker = 'git_files', options = { prompt_title = 'Workspace Git Files' } }
-      -- end, { desc = 'Search [G]it [W]orkspace [F]iles' })
-      -- Search Git files in the directory of the current buffer
       vim.keymap.set('n', '<leader>gf', function()
-        builtin.git_files { cwd = get_project_dir(), use_git_root = false }
+        require('kickstart.plugins.telescope.telescopePickers').prettyFilesPicker {
+          picker = 'git_files',
+          options = { cwd = get_project_dir(), use_git_root = false },
+        }
       end, { desc = 'Search [G]it [F]iles' })
-      -- vim.keymap.set('n', '<leader>gf', function()
-      --   require('kickstart.plugins.telescope.telescopePickers').prettyFilesPicker { picker = 'git_files', options = { cwd = get_project_dir() , use_git_root = false } }
-      -- end, { desc = 'Search [G]it [F]iles' })
-      -- vim.keymap.set('n', '<C-p>', builtin.git_files, { desc = 'Search [G]it [F]iles' })
       vim.keymap.set('n', '<leader>st', builtin.builtin, { desc = '[S]earch Select [T]elescope' })
       vim.keymap.set('n', '<leader>scw', function()
         require('kickstart.plugins.telescope.telescopePickers').prettyGrepPicker { picker = 'grep_string', options = { cwd = get_project_dir() } }

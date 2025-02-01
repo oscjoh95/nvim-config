@@ -19,7 +19,13 @@ local fileTypeIconWidth = plenaryStrings.strdisplaywidth(devIcons.get_icon('fnam
 ---- Helper functions ----
 
 -- Gets the File Path and its Tail (the file name) as a Tuple
-function telescopePickers.getPathAndTail(fileName)
+function telescopePickers.getPathAndTail(fileName, forceWindowsCompatiblePath)
+  if forceWindowsCompatiblePath then
+    -- Slightly modified version to handle windows paths
+    -- Replace all / with \\
+    fileName = string.gsub(fileName, '/', '\\')
+  end
+
   -- Get the Tail
   local bufferNameTail = telescopeUtilities.path_tail(fileName)
 
@@ -61,6 +67,9 @@ function telescopePickers.prettyFilesPicker(pickerAndOptions)
 
   -- Ensure 'options' integrity
   options = pickerAndOptions.options or {}
+
+  -- Force paths to be windows campatible (the ususal case doesnt allways work for git_files)
+  local forceWindowsPaths = pickerAndOptions.picker == 'git_files'
 
   -- Use Telescope's existing function to obtain a default 'entry_maker' function
   -- ----------------------------------------------------------------------------
@@ -105,7 +114,7 @@ function telescopePickers.prettyFilesPicker(pickerAndOptions)
     -- HELP: Read the 'make_entry.lua' file for more info on how all of this works
     originalEntryTable.display = function(entry)
       -- Get the Tail and the Path to display
-      local tail, pathToDisplay = telescopePickers.getPathAndTail(entry.value)
+      local tail, pathToDisplay = telescopePickers.getPathAndTail(entry.value, forceWindowsPaths)
 
       -- Add an extra space to the tail so that it looks nicely separated from the path
       local tailForDisplay = tail .. ' '
@@ -128,13 +137,10 @@ function telescopePickers.prettyFilesPicker(pickerAndOptions)
 
   -- Finally, check which file picker was requested and open it with its associated options
   if pickerAndOptions.picker == 'find_files' then
-    print(pickerAndOptions.picker)
     require('telescope.builtin').find_files(options)
   elseif pickerAndOptions.picker == 'git_files' then
-    print(pickerAndOptions.picker)
     require('telescope.builtin').git_files(options)
   elseif pickerAndOptions.picker == 'oldfiles' then
-    print(pickerAndOptions.picker)
     require('telescope.builtin').oldfiles(options)
   elseif pickerAndOptions.picker == '' then
     print 'Picker was not specified'
@@ -415,7 +421,7 @@ function telescopePickers.prettyBuffersPicker(localOptions)
     local halfSeparator = string.rep(' ', math.max(math.floor(fileTypeIconWidth / 2), 1))
 
     originalEntryTable.display = function(entry)
-      local tail, path = telescopePickers.getPathAndTail(entry.filename)
+      local tail, path = telescopePickers.getPathAndTail(entry.filename, true)
       local tailForDisplay = tail .. ' ' .. halfSeparator
       local icon, iconHighlight = telescopeUtilities.get_devicons(tail)
       local modifiedSymbol = vim.api.nvim_get_option_value('modified', { buf = entry.bufnr }) and ' [+]' or '    '
