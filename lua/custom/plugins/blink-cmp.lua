@@ -55,7 +55,7 @@ return {
       return true
     end
 
-    opts.fuzzy = { prebuilt_binaries = { download = true, force_version = 'v0.10.0' } }
+    opts.fuzzy = { prebuilt_binaries = { download = true, force_version = 'v0.13.1' } }
 
     -- NOTE: The new way to enable LuaSnip
     -- Merge custom sources with the existing ones from lazyvim
@@ -151,9 +151,10 @@ return {
           end,
         },
       },
-      -- command line completion, thanks to dpetka2001 in reddit
-      -- https://www.reddit.com/r/neovim/comments/1hjjf21/comment/m37fe4d/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
-      cmdline = function()
+    })
+
+    opts.cmdline = {
+      sources = function()
         local type = vim.fn.getcmdtype()
         if type == '/' or type == '?' then
           return { 'buffer' }
@@ -163,7 +164,11 @@ return {
         end
         return {}
       end,
-    })
+
+      completion = {
+        menu = { auto_show = true },
+      },
+    }
 
     opts.completion = {
       --   keyword = {
@@ -174,6 +179,21 @@ return {
       --   },
       menu = {
         border = 'single',
+
+        draw = {
+          components = {
+            kind_icon = {
+
+              ellipsis = false,
+              text = function(ctx)
+                return ctx.kind_icon .. ctx.icon_gap
+              end,
+              highlight = function()
+                return 'Special'
+              end,
+            },
+          },
+        },
       },
       documentation = {
         auto_show = true,
