@@ -50,6 +50,7 @@ return {
             'class',
             'function',
             'method',
+            'loop',
           },
         },
         multiwindow = false, -- No multiwindow support
