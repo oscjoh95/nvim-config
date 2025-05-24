@@ -4,7 +4,7 @@ return {
     'mfussenegger/nvim-dap',
     'rcarriga/nvim-dap-ui',
   },
-  -- ft = { 'python', 'py' },
+  ft = { 'python', 'py' },
 
   config = function()
     local dap = require 'dap'

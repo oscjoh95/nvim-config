@@ -7,7 +7,7 @@ return {
     init = function()
       vim.g.mkdp_filetypes = { 'markdown' }
     end,
-    ft = { 'markdown' },
+    ft = { 'markdown', 'md' },
   },
 
   -- Show preview in normal mode and code in insert
@@ -19,5 +19,6 @@ return {
     ---@module 'render-markdown'
     ---@type render.md.UserConfig
     opts = {},
+    ft = { 'markdown', 'md' },
   },
 }

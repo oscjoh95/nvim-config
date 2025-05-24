@@ -128,6 +128,7 @@ return {
       -- Required dependency for nvim-dap-ui
       'nvim-neotest/nvim-nio',
     },
+    keys = { '<F5>' },
     config = function()
       local dap = require 'dap'
       local dapui = require 'dapui'

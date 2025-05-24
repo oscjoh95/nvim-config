@@ -26,6 +26,7 @@ return {
     {
       'L3MON4D3/LuaSnip',
       version = 'v2.*',
+      event = 'VeryLazy',
       build = (function()
         if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
           return
@@ -40,6 +41,7 @@ return {
       },
     },
   },
+  event = 'InsertEnter',
   opts = function(_, opts)
     -- I noticed that telescope was extremeley slow and taking too long to open,
     -- assumed related to blink, so disabled blink and in fact it was related

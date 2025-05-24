@@ -40,6 +40,7 @@ return {
   {
     'ellisonleao/gruvbox.nvim',
     name = 'gruvbox',
+    priority = 1000, -- Ensure this loads before other plugins
     config = function()
       require('gruvbox').setup {
         terminal_colors = true, -- add neovim terminal colors
@@ -114,6 +115,7 @@ return {
   {
     'Mofiqul/vscode.nvim',
     name = 'vscode',
+    priority = 1000, -- Ensure this loads before other plugins
     opts = {
       transparent = true,
       italic_comments = true,

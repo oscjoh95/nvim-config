@@ -45,6 +45,7 @@ end
 
 return {
   'rmagatti/auto-session',
+  event = 'VimEnter',
   config = function()
     require('auto-session').setup {
       enabled = true,
