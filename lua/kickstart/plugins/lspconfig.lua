@@ -29,7 +29,7 @@ return {
       -- Allows extra capabilities provided by blink.cmp
       'saghen/blink.cmp',
     },
-    event = 'VeryLazy',
+    event = 'VimEnter',
     config = function()
       -- Brief aside: **What is LSP?**
       --
