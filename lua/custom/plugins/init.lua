@@ -6,6 +6,7 @@ return {
   require 'custom.plugins.auto-session',
   -- require 'custom.plugins.bufferline',
   require 'custom.plugins.colors',
+  require 'custom.plugins.git_conflict_status',
   require 'custom.plugins.fugitive',
   require 'custom.plugins.git-conflict',
   require 'custom.plugins.harpoon',
