@@ -20,6 +20,9 @@ return {
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
       require('mini.icons').setup()
+
+      -- Go forward/backward with square brackets
+      require('mini.bracketed').setup()
     end,
   },
 }
