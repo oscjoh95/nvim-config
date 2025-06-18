@@ -1,3 +1,18 @@
+local function get_format_options(bufnr)
+  -- Disable "format_on_save lsp_fallback" for languages that don't
+  -- have a well standardized coding style. You can add additional
+  -- languages here or re-enable it for the disabled ones.
+  local disable_filetypes = { c = true, cpp = false }
+  if disable_filetypes[vim.bo[bufnr].filetype] then
+    return nil
+  else
+    return {
+      timeout_ms = 2000,
+      lsp_format = 'fallback',
+    }
+  end
+end
+
 return {
   { -- Autoformat
     'stevearc/conform.nvim',
@@ -8,20 +23,12 @@ return {
         '<leader>f',
         function()
           local bufnr = vim.api.nvim_get_current_buf()
-          local filetype = vim.bo[bufnr].filetype
-          local disable_filetypes = { c = true, cpp = true }
-
-          local lsp_format_opt
-          if disable_filetypes[filetype] then
-            lsp_format_opt = 'never'
+          local format_opts = get_format_options(bufnr)
+          if format_opts then
+            require('conform').format(vim.tbl_extend('force', format_opts, { async = true }))
           else
-            lsp_format_opt = 'fallback'
+            vim.notify('Formatting disabled for this filetype', vim.log.levels.INFO)
           end
-
-          require('conform').format {
-            async = true,
-            lsp_format = lsp_format_opt,
-          }
         end,
         mode = '',
         desc = '[F]ormat buffer',
@@ -29,20 +36,7 @@ return {
     },
     opts = {
       notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          return nil
-        else
-          return {
-            timeout_ms = 1000,
-            lsp_format = 'fallback',
-          }
-        end
-      end,
+      format_on_save = get_format_options,
       formatters_by_ft = {
         lua = { 'stylua' },
         cpp = { 'clang_format' },
