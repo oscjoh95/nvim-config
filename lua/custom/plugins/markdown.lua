@@ -11,14 +11,34 @@ return {
   },
 
   -- Show preview in normal mode and code in insert
+  -- {
+  --   'MeanderingProgrammer/render-markdown.nvim',
+  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
+  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
+  --   --     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+  --   ---@module 'render-markdown'
+  --   ---@type render.md.UserConfig
+  --   opts = {},
+  --   ft = { 'markdown', 'md' },
+  -- },
+
   {
-    'MeanderingProgrammer/render-markdown.nvim',
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
-    dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
-    --     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-    ---@module 'render-markdown'
-    ---@type render.md.UserConfig
-    opts = {},
-    ft = { 'markdown', 'md' },
+    'OXY2DEV/markview.nvim',
+    lazy = false,
+
+    dependencies = {
+      'saghen/blink.cmp',
+      'nvim-treesitter/nvim-treesitter',
+      'echasnovski/mini.icons',
+    },
+    config = function()
+      local preset = require 'markview.presets'
+      require('markview').setup {
+        markdown = {
+          headings = preset.headings.slanted,
+          tables = preset.tables.rounded,
+        },
+      }
+    end,
   },
 }
