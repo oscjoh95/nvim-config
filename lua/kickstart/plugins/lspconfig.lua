@@ -228,13 +228,42 @@ return {
         clangd = {},
         -- gopls = {},
         pyright = {
-          filetypes = { 'python' },
+          settings = {
+            pyright = {
+              -- Using Ruff's import organizer
+              -- disableOrganizeImports = true,
+            },
+            python = {
+              analysis = {
+                diagnosticSeverityOverrides = {
+                  reportUndefinedVariable = 'none',
+                  reportOptionalMemberAccess = 'none',
+                  reportOptionalSubscript = 'none',
+                },
+                -- Ignore all files for analysis to exclusively use Ruff for linting
+                -- ignore = { '*' },
+              },
+            },
+          },
         },
         vimls = {},
         marksman = {},
         markdownlint = {
           settings = {
             disable = 'MD013',
+          },
+        },
+        ruff = {
+          init_options = {
+            settings = {
+              -- configuration = '/ruff.toml',
+              configurationPreference = 'filesystemFirst',
+              logLevel = 'debug',
+              logFile = vim.fn.stdpath 'log' .. '/lsp.ruff.log',
+              -- args = {
+              --   '--ignore F821',
+              -- },
+            },
           },
         },
         -- rust_analyzer = {},
