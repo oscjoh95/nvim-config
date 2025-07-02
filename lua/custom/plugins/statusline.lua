@@ -2,6 +2,8 @@ return {
   'nvim-lualine/lualine.nvim',
   dependencies = {
     'nvim-tree/nvim-web-devicons',
+    -- 'yavorski/lualine-macro-recording.nvim', -- For recording to display! Not needed if we use noice
+    'folke/noice.nvim',
     {
       dir = vim.fn.stdpath 'config' .. '/lua/custom/plugins/local_plugins/git_conflict_status',
       name = 'git_conflict_status',
@@ -58,6 +60,20 @@ return {
       require('custom.plugins.local_plugins.git_conflict_status').status,
     }
 
+    local mode = {
+      separator = { left = '', right = '' },
+      cond = require('noice').api.status.mode.has,
+      require('noice').api.status.mode.get,
+    }
+
+    local command = {
+      separator = { left = '', right = '' },
+      cond = require('noice').api.status.command.has,
+      require('noice').api.status.command.get,
+    }
+
+    vim.o.showcmd = true
+    vim.o.showcmdloc = 'statusline'
     require('lualine').setup {
       options = {
         always_divide_middle = false,
@@ -66,8 +82,10 @@ return {
       sections = {
         lualine_a = { 'mode' },
         lualine_b = { 'branch' },
-        lualine_c = { 'filename' },
-        lualine_x = { conflicts },
+        -- lualine_c = { 'filename', 'macro_recording' },
+        lualine_c = { 'filename', mode },
+        -- lualine_x = { command, conflicts },
+        lualine_x = { '%S', conflicts },
         lualine_y = { diff, diagnostics },
         lualine_z = { location, progress },
       },
