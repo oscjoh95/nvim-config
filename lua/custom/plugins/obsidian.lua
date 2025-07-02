@@ -81,7 +81,7 @@ return {
         local suffix = ''
         if title ~= nil then
           -- If title is given, transform it into valid file name.
-          suffix = title:gsub(' ', '-'):gsub('[^A-Za-z0-9-]', ''):lower()
+          suffix = title:gsub(' ', '-'):gsub('[^A-Za-z0-9-_]', ''):lower()
         else
           -- If title is nil, just add 4 random uppercase letters to the suffix.
           for _ = 1, 4 do
@@ -317,5 +317,38 @@ return {
         format = '{{properties}} properties {{backlinks}} backlinks {{words}} words {{chars}} chars',
       },
     }
+
+    -- Git autosync every hour when editing inside the vault
+    if vim.g.obsidian_git_timer_started == nil then
+      vim.g.obsidian_git_timer_started = true
+
+      local timer = vim.loop.new_timer()
+
+      timer:start(
+        0,
+        3600000,
+        vim.schedule_wrap(function()
+          local vault_path = vim.fn.expand '~/Documents/obsidian_vault'
+          local current_file = vim.api.nvim_buf_get_name(0)
+
+          if current_file ~= '' and current_file:sub(1, #vault_path) == vault_path then
+            vim.fn.jobstart({ 'nu', vim.fn.expand '~/Documents/obsidian_vault/obsidian_git_sync.nu' }, {
+              stdout_buffered = true,
+              stderr_buffered = true,
+              on_stdout = function(_, data)
+                if data and data[1] ~= '' then
+                  vim.notify(table.concat(data, '\n'), vim.log.levels.INFO, { title = 'Obsidian Git Sync' })
+                end
+              end,
+              on_stderr = function(_, data)
+                if data and data[1] ~= '' then
+                  vim.notify(table.concat(data, '\n'), vim.log.levels.INFO, { title = 'Obsidian Git Sync' })
+                end
+              end,
+            })
+          end
+        end)
+      )
+    end
   end,
 }
