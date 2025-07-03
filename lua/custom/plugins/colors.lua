@@ -12,6 +12,15 @@ function ColorMyPencils(color)
   -- }
 end
 
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'markdown',
+  callback = function()
+    vim.schedule(function()
+      vim.cmd 'lua ColorMyPencils("tokyonight")'
+    end)
+  end,
+})
+
 -- Auto-reapply transparency settings after *any* colorscheme change
 vim.api.nvim_create_autocmd('ColorScheme', {
   callback = function()
