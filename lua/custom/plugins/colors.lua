@@ -2,8 +2,6 @@ local my_default_color_scheme = 'gruvbox'
 function ColorMyPencils(color)
   color = color or my_default_color_scheme
   vim.cmd.colorscheme(color)
-  vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
-  vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
   -- Maybe have to add this to each color scheme to make it transparent
   -- opts = {
   --   transparent = true,
@@ -13,6 +11,16 @@ function ColorMyPencils(color)
   --   },
   -- }
 end
+
+-- Auto-reapply transparency settings after *any* colorscheme change
+vim.api.nvim_create_autocmd('ColorScheme', {
+  callback = function()
+    -- Transparent backgrounds (adjust for your needs)
+    vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
+    vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
+    -- Add any other global highlight tweaks here if needed
+  end,
+})
 
 return {
   -- Tokyonight color scheme
