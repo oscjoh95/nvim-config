@@ -319,6 +319,8 @@ return {
     }
 
     -- Git autosync every hour when editing inside the vault
+    local vault_path = vim.fn.expand '~/Documents/obsidian_vault'
+    local script_sync_path = vim.fn.expand '~/Documents/obsidian_vault/obsidian_git_sync.nu'
     if vim.g.obsidian_git_timer_started == nil then
       vim.g.obsidian_git_timer_started = true
 
@@ -326,13 +328,12 @@ return {
 
       timer:start(
         0,
-        3600000,
+        7200000,
         vim.schedule_wrap(function()
-          local vault_path = vim.fn.expand '~/Documents/obsidian_vault'
           local current_file = vim.api.nvim_buf_get_name(0)
 
           if current_file ~= '' and current_file:sub(1, #vault_path) == vault_path then
-            vim.fn.jobstart({ 'nu', vim.fn.expand '~/Documents/obsidian_vault/obsidian_git_sync.nu' }, {
+            vim.fn.jobstart({ 'nu', script_sync_path }, {
               stdout_buffered = true,
               stderr_buffered = true,
               on_stdout = function(_, data)
@@ -350,5 +351,14 @@ return {
         end)
       )
     end
+    vim.api.nvim_create_autocmd('VimLeavePre', {
+      callback = function()
+        local current_file = vim.fn.expand '%:p'
+
+        if current_file ~= '' and current_file:sub(1, #vault_path) == vault_path then
+          vim.fn.system { 'nu', script_sync_path }
+        end
+      end,
+    })
   end,
 }
