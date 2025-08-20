@@ -5,6 +5,11 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       local lint = require 'lint'
+
+      -- Copy the default markdownlint linter and override args
+      local markdownlint = lint.linters.markdownlint
+      markdownlint.args = { '--stdin', '--disable', 'MD013', '--disable', 'MD033', '--disable', 'MD034', '--disable', 'MD041', '--' }
+
       lint.linters_by_ft = {
         markdown = { 'markdownlint' },
       }
