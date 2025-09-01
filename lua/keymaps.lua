@@ -83,7 +83,15 @@ vim.keymap.set('n', 'J', 'mzJ`z', { desc = 'Combine lines, but keep cursor posit
 vim.keymap.set('x', '*', '"zy/<C-R>z<CR>', { desc = 'Search for marked text in visual mode' })
 
 -- Start changing word under cursor
-vim.keymap.set('n', '<leader>ss', ':%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>', { desc = 'Start changing word under cursor' })
+vim.keymap.set('n', '<leader>ss', ':%s/\\V<C-r><C-w>/<C-r><C-w>/gI<Left><Left><Left>', { desc = 'Start changing word under cursor' })
+vim.keymap.set('x', '<leader>ss', function()
+  vim.cmd 'normal! "zy' -- Yank visual selection into register z
+  local text = vim.fn.getreg 'z'
+  text = vim.fn.escape(text, '/\\') -- Escape / and \
+  local cmd = string.format(':%ss/\\V%s/%s/gI', '%', text, text)
+  vim.fn.feedkeys(cmd, 'n')
+  vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Left><Left><Left>', true, false, true), 'n')
+end, { desc = 'Start chaning word under cursor' })
 
 -- In visual mode, replace text and keep in register
 vim.keymap.set('x', '<leader>P', '"_dP', { desc = 'Replace text and keep in register' })
@@ -118,5 +126,30 @@ end, { expr = true })
 -- Switch between header and source file
 local misc_functions = require 'misc_functions'
 vim.keymap.set('n', '<leader>ts', misc_functions.switch_source_header, { desc = 'Toggle between [S]ource/Header' })
+
+-- Function to insert section separator
+vim.keymap.set('n', '<leader>ns', function()
+  local ft = vim.bo.filetype
+  local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- current cursor pos (1-based)
+
+  local lines
+  if ft == 'markdown' then
+    lines = { '', '---', '' }
+  elseif ft == 'cpp' or ft == 'c' or ft == 'h' or ft == 'hpp' or ft == 'cc' then
+    lines = {
+      '',
+      '//---------------------------------------------------------------------------------------------------------',
+      '',
+    }
+  else
+    return -- unsupported filetype
+  end
+
+  -- Insert lines *after* current line
+  vim.api.nvim_buf_set_lines(0, row, row, false, lines)
+
+  -- Move cursor to the last empty line
+  vim.api.nvim_win_set_cursor(0, { row + #lines, 0 })
+end, { desc = 'Mark [N]ew [S]ection' })
 
 -- vim: ts=2 sts=2 sw=2 et
