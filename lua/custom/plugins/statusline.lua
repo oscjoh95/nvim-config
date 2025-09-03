@@ -1,3 +1,19 @@
+local function qf_or_loclist_status()
+  -- First, check location list for the current window
+  local loclist = vim.fn.getloclist(0, { idx = 0, size = 0 })
+  if loclist.size > 0 then
+    return string.format('[L:%d/%d]', loclist.idx, loclist.size)
+  end
+
+  -- Then, check global quickfix list
+  local qflist = vim.fn.getqflist { idx = 0, size = 0 }
+  if qflist.size > 0 then
+    return string.format('[Q:%d/%d]', qflist.idx, qflist.size)
+  end
+
+  return ''
+end
+
 return {
   'nvim-lualine/lualine.nvim',
   dependencies = {
@@ -53,6 +69,11 @@ return {
         left = '',
         right = '',
       },
+    }
+
+    local list_status = {
+      separator = { left = '', right = '' },
+      qf_or_loclist_status,
     }
 
     local conflicts = {
