@@ -38,7 +38,12 @@ return {
           headings = preset.headings.slanted,
           tables = preset.tables.rounded,
         },
+        experimental = {
+          check_rtp_message = false, -- Disable warning that markview is loaded before nvim-treesitter
+        },
       }
     end,
   },
+
+  vim.keymap.set('n', '<leader>ch', 'I- [ ] ', { desc = 'Add checkbox at start of line' }),
 }
