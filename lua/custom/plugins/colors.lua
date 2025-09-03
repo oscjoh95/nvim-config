@@ -17,6 +17,11 @@ local sidebar_groups = {
   'DiagnosticSignInfo',
   'DiagnosticSignHint',
   'DiagnosticSignOk',
+  'TelescopeNormal',
+  'TelescopeBorder',
+  'TelescopePromptBorder',
+  'TelescopePromptTitle',
+  'LineNr',
 }
 
 -- === Utility Functions ===
