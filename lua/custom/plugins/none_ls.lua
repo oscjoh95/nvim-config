@@ -3,6 +3,7 @@ return {
   ft = { 'python' },
   dependencies = {
     'nvimtools/none-ls-extras.nvim',
+    'jay-babu/mason-null-ls.nvim',
   },
   config = function()
     local null_ls = require 'null-ls'
