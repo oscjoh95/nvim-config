@@ -85,6 +85,7 @@ return {
           map('grr', function()
             require('kickstart.plugins.telescope.telescopePickers').prettyLspPicker {
               picker = 'references',
+              options = { prompt_title = 'LSP References (' .. vim.fn.expand '<cword>' .. ')' },
             }
           end, '[G]oto [R]eferences')
 
@@ -102,6 +103,7 @@ return {
           map('grd', function()
             require('kickstart.plugins.telescope.telescopePickers').prettyLspPicker {
               picker = 'definitions',
+              options = { prompt_title = 'LSP Definitions (' .. vim.fn.expand '<cword>' .. ')' },
             }
           end, '[G]oto [D]efinition')
 
