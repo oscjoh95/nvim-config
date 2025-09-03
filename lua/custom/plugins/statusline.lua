@@ -89,8 +89,7 @@ return {
 
     local command = {
       separator = { left = '', right = '' },
-      cond = require('noice').api.status.command.has,
-      require('noice').api.status.command.get,
+      '%S',
     }
 
     vim.o.showcmd = true
@@ -103,10 +102,8 @@ return {
       sections = {
         lualine_a = { 'mode' },
         lualine_b = { 'branch' },
-        -- lualine_c = { 'filename', 'macro_recording' },
         lualine_c = { 'filename', mode },
-        -- lualine_x = { command, conflicts },
-        lualine_x = { '%S', conflicts },
+        lualine_x = { command, list_status, conflicts },
         lualine_y = { diff, diagnostics },
         lualine_z = { location, progress },
       },
