@@ -1,3 +1,16 @@
+local format_mode = 'hunks'
+
+-- Simple toggle command
+vim.api.nvim_create_user_command('ToggleFormatMode', function()
+  if format_mode == 'hunks' then
+    format_mode = 'all'
+    vim.notify('Format mode: FULL BUFFER', vim.log.levels.INFO)
+  else
+    format_mode = 'hunks'
+    vim.notify('Format mode: HUNKS ONLY', vim.log.levels.INFO)
+  end
+end, { desc = 'Toggle between hunk-only formatting and full buffer formatting' })
+
 -- Decide which filetypes should use hunk-only formatting
 local hunk_only_filetypes = {
   python = true,
@@ -83,8 +96,19 @@ end
 vim.api.nvim_create_autocmd('BufWritePre', {
   callback = function(args)
     if hunk_only_filetypes[vim.bo[args.buf].filetype] then
-      format_hunk(false)
-      return true
+      local bufnr = args.buf
+      local ft = vim.bo[bufnr].filetype
+      local format_opts = get_format_options(bufnr)
+
+      if not format_opts then
+        return
+      end
+
+      if format_mode == 'hunks' then
+        format_hunk(false) -- sync on save
+      else
+        require('conform').format(vim.tbl_extend('force', format_opts, { async = false }))
+      end
     end
   end,
 })
@@ -148,6 +172,16 @@ return {
     },
   },
 
-  vim.keymap.set('n', '<leader>f', format_hunk, { desc = '[F]ormat hunks in current buffer' }),
+  vim.keymap.set('n', '<leader>f', function()
+    if format_mode == 'hunks' then
+      format_hunk(true)
+    else
+      local bufnr = vim.api.nvim_get_current_buf()
+      local format_opts = get_format_options(bufnr)
+      if format_opts then
+        require('conform').format(vim.tbl_extend('force', format_opts, { async = true }))
+      end
+    end
+  end, { desc = '[F]ormat hunks (or buffer depending on mode) in current buffer' }),
 }
 -- vim: ts=2 sts=2 sw=2 et
