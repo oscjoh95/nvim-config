@@ -1,3 +1,13 @@
+-- Decide which filetypes should use hunk-only formatting
+local hunk_only_filetypes = {
+  python = true,
+  cpp = true,
+  c = true,
+  h = true,
+  hpp = true,
+  -- add more if you want
+}
+
 local function get_format_options(bufnr)
   -- Disable "format_on_save lsp_fallback" for languages that don't
   -- have a well standardized coding style. You can add additional
@@ -13,6 +23,72 @@ local function get_format_options(bufnr)
   end
 end
 
+local function format_hunk(async)
+  local ignore_filetypes = { 'lua' }
+  if vim.tbl_contains(ignore_filetypes, vim.bo.filetype) then
+    vim.notify('range formatting for ' .. vim.bo.filetype .. ' not working properly.')
+    return
+  end
+
+  local hunks = require('gitsigns').get_hunks()
+  if hunks == nil then
+    return
+  end
+
+  local format = require('conform').format
+
+  local function format_range()
+    if next(hunks) == nil then
+      vim.notify('done formatting git hunks', 'info', { title = 'formatting' })
+      return
+    end
+    local hunk = nil
+    while next(hunks) ~= nil and (hunk == nil or hunk.type == 'delete') do
+      hunk = table.remove(hunks)
+    end
+
+    local bufnr = vim.api.nvim_get_current_buf()
+    local format_opts = get_format_options(bufnr)
+    if not format_opts then
+      vim.notify('Formatting disabled for this filetype', vim.log.levels.INFO)
+    end
+
+    if hunk ~= nil and hunk.type ~= 'delete' then
+      local start = hunk.added.start
+      local last = start + hunk.added.count
+      local last_hunk_line = vim.api.nvim_buf_get_lines(0, last - 2, last - 1, true)[1]
+      local range = { start = { start, 0 }, ['end'] = { last - 1, last_hunk_line:len() } }
+      -- format(vim.tbl_extend('force', { range = range, async = async ~= false }, format_opts), function()
+      --   vim.defer_fn(function()
+      --     format_range()
+      --   end, 1)
+      -- end)
+      local opts = vim.tbl_extend('force', { range = range, async = async ~= false }, format_opts)
+
+      if opts.async then
+        format(opts, function()
+          vim.defer_fn(format_range, 1)
+        end)
+      else
+        format(opts)
+        format_range()
+      end
+    end
+  end
+
+  format_range()
+end
+
+-- Autocmd: only use hunk formatting on save for selected filetypes
+vim.api.nvim_create_autocmd('BufWritePre', {
+  callback = function(args)
+    if hunk_only_filetypes[vim.bo[args.buf].filetype] then
+      format_hunk(false)
+      return true
+    end
+  end,
+})
+
 return {
   { -- Autoformat
     'stevearc/conform.nvim',
@@ -21,12 +97,12 @@ return {
       'jay-babu/mason-null-ls.nvim',
       'mason-org/mason-lspconfig.nvim',
       'neovim/nvim-lspconfig',
+      'lewis6991/gitsigns.nvim',
     },
-    event = { 'BufWritePre' },
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>f',
+        '<leader>F',
         function()
           local bufnr = vim.api.nvim_get_current_buf()
           local format_opts = get_format_options(bufnr)
@@ -44,7 +120,14 @@ return {
       notify_on_error = false,
       default_format_opts = { lsp_format = 'never' },
       stop_after_first = false,
-      format_on_save = get_format_options,
+      -- format_on_save = get_format_options,
+      format_on_save = function(bufnr)
+        local ft = vim.bo[bufnr].filetype
+        if hunk_only_filetypes[ft] then
+          return nil -- disable Conform save-formatting
+        end
+        return get_format_options(bufnr)
+      end,
       formatters_by_ft = {
         lua = { 'stylua' },
         cpp = { 'clang_format' },
@@ -64,5 +147,7 @@ return {
       },
     },
   },
+
+  vim.keymap.set('n', '<leader>f', format_hunk, { desc = '[F]ormat hunks in current buffer' }),
 }
 -- vim: ts=2 sts=2 sw=2 et
