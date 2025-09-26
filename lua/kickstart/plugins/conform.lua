@@ -1,4 +1,4 @@
-local format_mode = 'hunks'
+local format_mode = 'all'
 
 -- Simple toggle command
 vim.api.nvim_create_user_command('ToggleFormatMode', function()
@@ -112,6 +112,16 @@ vim.api.nvim_create_autocmd('BufWritePre', {
     end
   end,
 })
+
+-- Command :W = format full buffer, then save
+vim.api.nvim_create_user_command('W', function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local format_opts = get_format_options(bufnr)
+  if format_opts then
+    require('conform').format(vim.tbl_extend('force', format_opts, { async = false }))
+  end
+  vim.cmd 'write'
+end, { desc = 'Format whole buffer and save' })
 
 return {
   { -- Autoformat
