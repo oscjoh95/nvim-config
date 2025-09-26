@@ -73,8 +73,8 @@ local function apply_transparency_override()
 end
 
 ------
--- Public functions
-function ChangeTransparency()
+-- User functions
+local function ChangeTransparency()
   transparent_background = not transparent_background
   -- local_sidebar = transparent_background and 'transparent' or 'dark'
   -- local_floats = transparent_background and 'transparent' or 'dark'
@@ -120,6 +120,11 @@ vim.api.nvim_create_autocmd('User', {
     apply_transparency_override()
   end,
 })
+
+-- Create command
+vim.api.nvim_create_user_command('ChangeTransparency', function()
+  ChangeTransparency()
+end, { desc = 'Change transparancy' })
 
 return {
   -- Tokyonight color scheme
