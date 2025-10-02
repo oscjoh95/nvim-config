@@ -90,4 +90,10 @@ vim.opt.softtabstop = 4
 -- Use space characters instead of tabs.
 vim.opt.expandtab = true
 
+-- Set terminal keys to work with nushell
+vim.opt.shell = "nu.exe"
+vim.opt.shellcmdflag = "-c"
+vim.opt.shellquote   = ""
+vim.opt.shellxquote  = ""
+
 -- vim: ts=2 sts=2 sw=2 et
