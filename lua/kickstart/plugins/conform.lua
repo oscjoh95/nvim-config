@@ -2,14 +2,21 @@ local format_mode = 'all'
 
 -- Simple toggle command
 vim.api.nvim_create_user_command('ToggleFormatMode', function()
-  if format_mode == 'hunks' then
-    format_mode = 'all'
-    vim.notify('Format mode: FULL BUFFER', vim.log.levels.INFO)
-  else
+  if format_mode == 'all' then
     format_mode = 'hunks'
     vim.notify('Format mode: HUNKS ONLY', vim.log.levels.INFO)
+  elseif format_mode == 'hunks' then
+    format_mode = 'none'
+    vim.notify('Format mode: NO FORMAT', vim.log.levels.INFO)
+  else
+    format_mode = 'all'
+    vim.notify('Format mode: FULL BUFFER', vim.log.levels.INFO)
   end
-end, { desc = 'Toggle between hunk-only formatting and full buffer formatting' })
+end, { desc = 'Toggle between full buffer, hunk-only and disabled formatting' })
+
+vim.api.nvim_create_user_command('ShowFormatMode', function()
+  vim.notify('Format mode: ' .. format_mode)
+end, { desc = 'Show format mode for saving' })
 
 -- Decide which filetypes should use hunk-only formatting
 local hunk_only_filetypes = {
@@ -95,6 +102,10 @@ end
 -- Autocmd: only use hunk formatting on save for selected filetypes
 vim.api.nvim_create_autocmd('BufWritePre', {
   callback = function(args)
+    if format_mode == 'none' then
+      return
+    end
+
     if hunk_only_filetypes[vim.bo[args.buf].filetype] then
       local bufnr = args.buf
       local ft = vim.bo[bufnr].filetype
