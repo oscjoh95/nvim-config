@@ -19,6 +19,42 @@ return function(opts)
   }
   opts.pattern = opts.pattern or '%s'
 
+  -- Helper: gather buffer names depending on flags
+  local function get_target_buffers()
+    local bufs = {}
+    local mode = opts.grep_visible_only and 'visible' or opts.grep_open_files and 'listed' or nil
+
+    if not mode then
+      return nil -- no restriction
+    end
+
+    -- visible buffers
+    if mode == 'visible' then
+      local wins = vim.api.nvim_list_wins()
+      for _, win in ipairs(wins) do
+        local bufnr = vim.api.nvim_win_get_buf(win)
+        local name = vim.api.nvim_buf_get_name(bufnr)
+        if name ~= '' and vim.loop.fs_stat(name) then
+          table.insert(bufs, name)
+        end
+      end
+      return bufs
+    end
+
+    -- listed buffers (the ones shown in :ls)
+    if mode == 'listed' then
+      for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.bo[bufnr].buflisted then
+          local name = vim.api.nvim_buf_get_name(bufnr)
+          if name ~= '' and vim.loop.fs_stat(name) then
+            table.insert(bufs, name)
+          end
+        end
+      end
+      return bufs
+    end
+  end
+
   local custom_grep = finders.new_async_job {
     command_generator = function(prompt)
       if not prompt or prompt == '' then
@@ -46,10 +82,15 @@ return function(opts)
         table.insert(args, string.format(opts.pattern, pattern))
       end
 
-      return flatten {
-        args,
-        { '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case' },
-      }
+      local common_args = { '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case' }
+
+      local target_files = get_target_buffers()
+      if target_files and not vim.tbl_isempty(target_files) then
+        args = flatten { args, common_args, '--', target_files }
+      else
+        args = flatten { args, common_args }
+      end
+      return args
     end,
     entry_maker = opts.entry_maker or make_entry.gen_from_vimgrep(opts),
     cwd = opts.cwd,

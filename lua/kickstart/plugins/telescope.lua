@@ -197,16 +197,25 @@ return {
 
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
-      -- vim.keymap.set('n', '<leader>sb', function()
-      vim.keymap.set('n', '<leader>s/', function()
+      vim.keymap.set('n', '<leader>svb', function()
+        require('kickstart.plugins.telescope.telescopePickers').prettyGrepPicker {
+          picker = 'multi-ripgrep',
+          options = {
+            grep_visible_only = true,
+            prompt_title = 'Live Grep in Visible Buffers',
+          },
+        }
+      end, { desc = '[S]earch in [V]isible [B]uffers' })
+
+      vim.keymap.set('n', '<leader>sob', function()
         require('kickstart.plugins.telescope.telescopePickers').prettyGrepPicker {
           picker = 'multi-ripgrep',
           options = {
             grep_open_files = true,
-            prompt_title = 'Live Grep in Open Files',
+            prompt_title = 'Live Grep in Open Buffers',
           },
         }
-      end, { desc = '[S]earch [/] in Open Files' })
+      end, { desc = '[S]earch in [O]pen [B]uffers' })
 
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>sn', function()
