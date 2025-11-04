@@ -170,5 +170,5 @@ return {
     end,
   },
 
-  require 'kickstart.plugins.debugging',
+  -- require 'kickstart.plugins.debugging',
 }

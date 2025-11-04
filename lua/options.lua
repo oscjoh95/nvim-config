@@ -91,8 +91,8 @@ vim.opt.softtabstop = 4
 vim.opt.expandtab = true
 
 -- Set terminal keys to work with nushell
-vim.opt.shell = "nu.exe"
-vim.opt.shellcmdflag = "-c"
+vim.opt.shell = '"C:\\Program Files\\Git\\bin\\bash.exe"'
+vim.opt.shellcmdflag = "--login -i -c"
 vim.opt.shellquote   = ""
 vim.opt.shellxquote  = ""
 

@@ -32,6 +32,7 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 -- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 -- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set('n', '<C-s>', function() vim.notify("Use :w to save!!", vim.log.levels.ERROR) end)
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -125,7 +126,7 @@ end, { expr = true })
 
 -- Switch between header and source file
 local misc_functions = require 'misc_functions'
-vim.keymap.set('n', '<leader>ts', misc_functions.switch_source_header, { desc = 'Toggle between [S]ource/Header' })
+-- vim.keymap.set('n', '<leader>ts', misc_functions.switch_source_header, { desc = 'Toggle between [S]ource/Header' })
 
 -- Function to insert section separator
 vim.keymap.set('n', '<leader>ns', function()
