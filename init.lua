@@ -137,6 +137,16 @@ vim.api.nvim_create_autocmd('VimEnter', {
   command = ':clearjumps',
 })
 
+
+vim.api.nvim_create_autocmd("VimEnter", {
+    callback = function()
+        -- Only split if there's just one window open
+        if vim.fn.winnr('$') == 1 then
+            vim.cmd("vsplit")
+        end
+    end
+})
+
 -- Remove items from quickfix list.
 -- `dd` to delete in Normal
 -- `d` to delete Visual selection
