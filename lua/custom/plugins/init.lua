@@ -19,5 +19,6 @@ return {
   require 'custom.plugins.statusline',
   require 'custom.plugins.trouble',
   require 'custom.plugins.undotree',
+  require 'custom.plugins.build_solution',
   -- require 'custom.plugins.zenmode',
 }

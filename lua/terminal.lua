@@ -1,8 +1,8 @@
 local M = {}
 
 local state = {
-  floating = { buf = -1, win = -1 },
-  bottom = { buf = -1, win = -1 },
+  floating = { buf = -1, win = -1i, id = -1 },
+  bottom = { buf = -1, win = -1, id = -1 },
 }
 
 local floating_terminal_default_height = math.floor(vim.o.lines * 0.8)
@@ -61,6 +61,7 @@ local function toggle_terminal(state_entry, create_window, command, width, heigh
 
     if vim.bo[state_entry.buf].buftype ~= 'terminal' then
       vim.cmd.terminal()
+      state_entry.id = vim.b.terminal_job_id
     end
 
     if command then
@@ -81,6 +82,17 @@ function M.toggle_bottom_terminal(command, height)
     opts.height = height
     return create_bottom_window(opts)
   end, command, nil, height)
+end
+
+function M.open_bottom_terminal(command, height)
+  if not vim.api.nvim_win_is_valid(state.bottom.win) then
+    toggle_terminal(state.bottom, function(opts)
+      opts.height = height
+      return create_bottom_window(opts)
+    end, command, nil, height)
+  else
+    vim.fn.chansend(state.bottom.id, command .. '\r\n')
+  end
 end
 
 -- Command to toggle and resize bottom terminal
