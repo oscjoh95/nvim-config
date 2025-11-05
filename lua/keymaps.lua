@@ -127,6 +127,7 @@ end, { expr = true })
 -- Switch between header and source file
 local misc_functions = require 'misc_functions'
 -- vim.keymap.set('n', '<leader>ts', misc_functions.switch_source_header, { desc = 'Toggle between [S]ource/Header' })
+vim.keymap.set('n', '<C-K><C-O>', misc_functions.switch_source_header, { desc = 'Toggle between [S]ource/Header' })
 
 -- Function to insert section separator
 vim.keymap.set('n', '<leader>ns', function()
