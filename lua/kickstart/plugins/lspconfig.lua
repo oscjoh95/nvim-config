@@ -227,8 +227,13 @@ return {
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      local lspconfig = require("lspconfig")
+      local clangd_cmd = lspconfig.clangd.document_config.default_config.cmd or { "clangd" }
+      table.insert(clangd_cmd, "--header-insertion=never")
       local servers = {
-        clangd = {},
+        clangd = {
+          cmd = clangd_cmd,
+        },
         -- gopls = {},
         pyright = {
           settings = {
