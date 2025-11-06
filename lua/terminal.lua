@@ -1,7 +1,7 @@
 local M = {}
 
 local state = {
-  floating = { buf = -1, win = -1i, id = -1 },
+  floating = { buf = -1, win = -1, id = -1 },
   bottom = { buf = -1, win = -1, id = -1 },
 }
 
